@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1565c0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Início - Sistema de Triagem</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="main-container">
+        <header class="header">
+            <h1>Início</h1>
+        </header>
+
+        <main class="content page-transition">
+            <div class="welcome-card">
+                <h2>Olá, <span class="user-name">Usuário</span>!</h2>
+                <p>Bem-vindo ao Sistema de Triagem. O que deseja fazer hoje?</p>
+            </div>
+            <div class="menu-container">
+                <div class="menu-item" onclick="navigateTo('triagem')">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Nova Triagem</span>
+                </div>
+                <div class="menu-item" onclick="navigateTo('resultado')">
+                    <i class="fas fa-clipboard-check"></i>
+                    <span>Status da Triagem</span>
+                </div>
+                <div class="menu-item" onclick="navigateTo('ajuda')">
+                    <i class="fas fa-question-circle"></i>
+                    <span>Ajuda</span>
+                </div>
+                <div class="menu-item" onclick="navigateTo('dados-pessoais')">
+                    <i class="fas fa-user"></i>
+                    <span>Meus Dados</span>
+                </div>
+            </div>
+        </main>
+
+        <nav class="nav-bar">
+            <a href="javascript:void(0)" onclick="navigateTo('inicio')" class="nav-item active">
+                <i class="fas fa-home"></i>
+                <span>Início</span>
+            </a>
+            <a href="javascript:void(0)" onclick="navigateTo('historico')" class="nav-item">
+                <i class="fas fa-history"></i>
+                <span>Histórico</span>
+            </a>
+            <a href="javascript:void(0)" onclick="navigateTo('configuracoes')" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Config</span>
+            </a>
+        </nav>
+        <footer class="app-footer">
+            <p>Sistema de Triagem Virtual</p>
+            <div class="footer-links">
+                <a href="#" class="footer-link">Termos de Uso</a>
+                <span class="footer-divider">|</span>
+                <a href="#" class="footer-link">Privacidade</a>
+                <span class="footer-divider">|</span>
+                <a href="#" class="footer-link">Ajuda</a>
+            </div>
+            <p class="version">Versão 1.0.0</p>
+        </footer>
+    </div>
+
+
+    <div id="toastContainer"></div>
+    <script src="app.js"></script>
+    <script>
+        // Atualizar item ativo na navegação
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentUser = DB.get('currentUser');
+            if (!currentUser) {
+                window.location.replace('./index.html');
+                return;
+            }
+
+            // Atualiza o nome do usuário
+            const userNameElement = document.querySelector('.user-name');
+            if (userNameElement && currentUser.name) {
+                userNameElement.textContent = currentUser.name;
+            }
+
+            // Atualiza navegação ativa sem recarregar
+            const currentPath = window.location.pathname;
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('onclick').includes(currentPath.split('/').pop().replace('.html', ''))) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Função de navegação otimizada
+        function navigateTo(page) {
+            if (page === 'inicio') {
+                return; // Não recarrega se já estiver na página inicial
+            }
+            window.location.replace(`${page}.html`);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0052CC">
+    <title>Página de Ajuda - Sistema de Triagem</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --background: #121212;
+            --surface: #1E1E1E;
+            --primary: #0052CC;
+            --primary-dark: #0747A6;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --shadow-lg: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text-primary);
+        }
+
+        .help-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: var(--surface);
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .help-section {
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+
+        .help-section h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .help-section p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .help-section ul, .help-section ol {
+            color: var(--text-secondary);
+            padding-left: 1.5rem;
+        }
+
+        .help-section li {
+            margin-bottom: 0.5rem;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--primary);
+            color: var(--text-primary);
+            border-radius: 8px;
+            text-decoration: none;
+            margin-bottom: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: var(--primary-dark);
+        }
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--primary-dark);
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container" style="min-height: 100vh; background: var(--background); padding: 2rem;">
+        <div class="help-container">
+            <a href="#" onclick="handleBackClick()" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+                Voltar
+            </a>
+
+            <div class="help-section">
+                <h2><i class="fas fa-sign-in-alt"></i> Como Fazer Login</h2>
+                <p>Para acessar o sistema, você tem duas opções:</p>
+                <ul>
+                    <li>Entrar com sua conta Gov.br (recomendado)</li>
+                    <li>Usar seu CPF ou e-mail e senha cadastrados</li>
+                </ul>
+            </div>
+
+            <div class="help-section">
+                <h2><i class="fas fa-user-plus"></i> Como se Cadastrar</h2>
+                <p>Para criar uma nova conta:</p>
+                <ol>
+                    <li>Clique na aba "Cadastro"</li>
+                    <li>Preencha todos os campos obrigatórios</li>
+                    <li>Leia e aceite os termos de uso</li>
+                    <li>Clique em "Cadastrar"</li>
+                </ol>
+            </div>
+
+            <div class="help-section">
+                <h2><i class="fas fa-key"></i> Esqueci minha Senha</h2>
+                <p>Se você esqueceu sua senha:</p>
+                <ol>
+                    <li>Clique em "Esqueceu a senha?" na tela de login</li>
+                    <li>Digite seu CPF ou e-mail cadastrado</li>
+                    <li>Siga as instruções enviadas para seu e-mail</li>
+                </ol>
+            </div>
+
+            <div class="help-section">
+                <h2><i class="fas fa-question-circle"></i> Problemas Comuns</h2>
+                <p>Se você encontrar algum problema:</p>
+                <ul>
+                    <li>Verifique se todos os campos foram preenchidos corretamente</li>
+                    <li>Certifique-se de que sua conexão com a internet está funcionando</li>
+                    <li>Limpe o cache do seu navegador e tente novamente</li>
+                    <li>Se o problema persistir, entre em contato com o suporte</li>
+                </ul>
+            </div>
+
+            <div class="help-section">
+                <h2><i class="fas fa-headset"></i> Suporte</h2>
+                <p>Para obter ajuda adicional:</p>
+                <ul>
+                    <li>E-mail: suporte@sistemadetriagem.com.br</li>
+                    <li>Telefone: (XX) XXXX-XXXX</li>
+                    <li>Horário de atendimento: Segunda a Sexta, 8h às 18h</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script>
+        function handleBackClick() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const returnTo = urlParams.get('returnTo');
+            
+            if (returnTo) {
+                window.location.href = returnTo;
+            } else {
+                window.location.href = 'inicio.html';
+            }
+        }
+    </script>
+</body>
+</html> 

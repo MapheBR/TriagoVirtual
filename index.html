@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Triago - Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --background: #1a1c1e;
+            --surface: #232529;
+            --input-bg: #2a2d35;
+            --requirements-bg: #1e2023;
+            --text: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --error: #ef4444;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--background);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 2rem;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .logo-container img {
+            width: 120px;
+            height: auto;
+        }
+
+        .welcome-text {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--text);
+            font-size: 1.1rem;
+            font-weight: 500;
+            animation: fadeIn 0.5s ease 0.2s both;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 2rem;
+            background: var(--surface);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            animation: slideUp 0.5s ease 0.4s both;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 0.5rem;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            background: none;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .auth-tab.active {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--primary);
+        }
+
+        .govbr-button {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .govbr-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .govbr-button img {
+            height: 24px;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 1.5rem 0;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: var(--input-bg);
+            border: none;
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            padding-right: 2.5rem;
+            background: var(--input-bg);
+            border: none;
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-group .icon-wrapper {
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 0.25rem;
+            border-radius: 50%;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            pointer-events: auto;
+            width: 24px;
+            height: 24px;
+            -webkit-appearance: none;
+        }
+
+        .input-group .icon-wrapper i,
+        .input-group .icon-wrapper .fas {
+            color: var(--text-secondary) !important;
+            font-size: 1rem;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .input-group .icon-wrapper:hover {
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .input-group .icon-wrapper:hover i,
+        .input-group .icon-wrapper:hover .fas {
+            color: var(--text) !important;
+        }
+
+        /* Ensure icons stay visible */
+        .input-group input:focus + .icon-wrapper,
+        .input-group input:active + .icon-wrapper,
+        .input-group input:hover + .icon-wrapper {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .requirements-field {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: var(--input-bg);
+            border: none;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .requirements-field span {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .requirements-field ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .requirements-field li {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0.375rem 0;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .requirements-field li i {
+            font-size: 0.625rem;
+            width: 12px;
+            height: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .requirements-field li.valid {
+            color: var(--text);
+        }
+
+        .requirements-field li.valid i {
+            background: var(--primary);
+            color: var(--text);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+        }
+
+        .checkbox-group label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .checkbox-group label a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .auth-links {
+            text-align: right;
+            margin: 1rem 0;
+        }
+
+        .auth-links a {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .auth-links a:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        #loginForm, #cadastroForm {
+            display: none;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+        }
+
+        #loginForm.active, #cadastroForm.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 16px;
+            }
+
+            .auth-container {
+                padding: 1.5rem;
+            }
+
+            .welcome-text {
+                font-size: 1rem;
+            }
+        }
+
+        /* Toast container styles */
+        .toast-container {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1000;
+        }
+
+        .toast {
+            background: var(--surface);
+            color: var(--text);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.3s ease;
+        }
+
+        .toast.error {
+            background: #ef4444;
+        }
+
+        .toast.success {
+            background: #10b981;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Specific styles for the calendar icon */
+        input[type="date"] {
+            color-scheme: dark;
+        }
+        
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+            opacity: 0.7;
+            background: transparent;
+        }
+
+        input[type="date"]::-webkit-calendar-picker-indicator:hover {
+            opacity: 1;
+        }
+
+        /* Hide default calendar icon */
+        input[type="date"]::-webkit-inner-spin-button,
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            display: none;
+            -webkit-appearance: none;
+        }
+
+        #cadastroCPF {
+            letter-spacing: 1px;
+        }
+
+        .input-group input[type="date"] {
+            padding-right: 1rem;
+        }
+
+        .input-group input[type="date"] + .icon-wrapper {
+            pointer-events: none;
+        }
+
+        /* Additional password field specific styles */
+        input[type="password"] {
+            -webkit-text-security: disc !important;
+            -webkit-appearance: none !important;
+            appearance: none !important;
+        }
+
+        input[type="password"]::-webkit-inner-spin-button,
+        input[type="password"]::-webkit-outer-spin-button,
+        input[type="password"]::-webkit-search-cancel-button {
+            -webkit-appearance: none !important;
+            appearance: none !important;
+            display: none !important;
+        }
+
+        /* Force hide any browser specific password reveal icons */
+        input[type="password"]::-ms-reveal,
+        input[type="password"]::-ms-clear {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+        }
+
+        /* Ensure custom icon remains visible and properly styled */
+        .input-group input[type="password"] + .icon-wrapper i {
+            color: var(--text-secondary) !important;
+            opacity: 1 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        .scroll-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .scroll-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-to-top:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div id="toastContainer" class="toast-container"></div>
+
+    <div class="logo-container">
+        <img src="logo.png" alt="Triago">
+    </div>
+
+    <div class="welcome-text">
+        Bem-vindo! Acesse sua conta ou cadastre-se para começar.
+            </div>
+
+    <div class="auth-container">
+            <div class="auth-tabs">
+                <button class="auth-tab active" onclick="switchTab('login')">Login</button>
+                <button class="auth-tab" onclick="switchTab('cadastro')">Cadastro</button>
+            </div>
+
+        <!-- Login Form -->
+        <div id="loginForm" class="active">
+                <button class="govbr-button" onclick="loginWithGovBr()">
+                    <img src="govbr-logo.png" alt="Gov.br">
+                Entrar com Gov.br
+                </button>
+
+            <div class="divider">ou continue com</div>
+
+            <div class="input-group">
+                <input type="text" id="username" placeholder="CPF ou E-mail" autocomplete="username">
+                <div class="icon-wrapper">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="error-message" id="username-error"></div>
+            </div>
+
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Senha" autocomplete="current-password">
+                <div class="icon-wrapper" onclick="togglePassword('password')">
+                    <i class="fas fa-eye"></i>
+                </div>
+                <div class="error-message" id="password-error"></div>
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="lembrar">
+                <label for="lembrar">Lembrar-me</label>
+                </div>
+
+            <div class="auth-links">
+                <a href="#" onclick="showResetPassword()">Esqueceu a senha?</a>
+            </div>
+
+            <button class="btn btn-primary" onclick="handleLogin()">
+                Entrar <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+
+        <!-- Cadastro Form -->
+        <div id="cadastroForm">
+            <div class="input-group">
+                <input type="text" id="cadastroNome" placeholder="Nome completo" autocomplete="name">
+                <div class="icon-wrapper">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="error-message" id="nome-error"></div>
+                </div>
+
+            <div class="input-group">
+                <input type="text" id="cadastroCPF" placeholder="CPF" maxlength="14" autocomplete="off">
+                <div class="icon-wrapper">
+                    <i class="fas fa-id-card"></i>
+                </div>
+                <div class="error-message" id="cpf-error"></div>
+                </div>
+
+            <div class="input-group">
+                <input type="date" id="cadastroNascimento" placeholder="Data de Nascimento" max="9999-12-31">
+                <div class="icon-wrapper">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="error-message" id="nascimento-error"></div>
+            </div>
+
+            <div class="input-group">
+                <input type="email" id="cadastroEmail" placeholder="E-mail" autocomplete="email">
+                <div class="icon-wrapper">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="error-message" id="email-error"></div>
+            </div>
+
+            <div class="input-group">
+                <input type="tel" id="cadastroTelefone" placeholder="Telefone" maxlength="15" autocomplete="tel">
+                <div class="icon-wrapper">
+                    <i class="fas fa-phone"></i>
+                </div>
+                <div class="error-message" id="telefone-error"></div>
+            </div>
+
+            <div class="input-group">
+                <input type="password" id="cadastroSenha" class="input-field" placeholder="Senha" autocomplete="new-password">
+                <div class="icon-wrapper" onclick="togglePassword('cadastroSenha')">
+                    <i class="fas fa-eye"></i>
+                </div>
+            </div>
+
+            <div class="requirements-field">
+                <span>A senha deve conter:</span>
+                <ul>
+                    <li><i class="fas fa-circle"></i> Mínimo de 8 caracteres</li>
+                    <li><i class="fas fa-circle"></i> Uma letra maiúscula</li>
+                    <li><i class="fas fa-circle"></i> Um número</li>
+                    <li><i class="fas fa-circle"></i> Um caractere especial (!@#$%^&*)</li>
+                </ul>
+    </div>
+
+            <div class="input-group">
+                <input type="password" id="confirmSenha" class="input-field" placeholder="Confirmar senha" autocomplete="new-password">
+                <div class="icon-wrapper" onclick="togglePassword('confirmSenha')">
+                    <i class="fas fa-eye"></i>
+                </div>
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="termos">
+                <label for="termos">Li e aceito os <a href="#" onclick="showTerms()">termos de uso</a></label>
+            </div>
+
+            <button class="btn btn-primary" onclick="handleCadastro()">
+                Criar conta <i class="fas fa-user-plus"></i>
+            </button>
+        </div>
+    </div>
+
+    <button class="scroll-to-top" onclick="scrollToTop()" title="Voltar ao topo">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // Função para alternar visibilidade da senha
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = input.nextElementSibling.querySelector('i');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+            
+            // Mantém o foco no input
+            input.focus();
+        }
+
+        // Adiciona listeners para manter os ícones visíveis
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('.input-group input');
+            
+            inputs.forEach(input => {
+                const iconWrapper = input.nextElementSibling;
+                if (iconWrapper && iconWrapper.classList.contains('icon-wrapper')) {
+                    iconWrapper.style.opacity = '1';
+                    iconWrapper.style.visibility = 'visible';
+                }
+            });
+        });
+
+        // Função para salvar os dados do usuário
+        function handleCadastro() {
+            const nome = document.getElementById('cadastroNome').value;
+            const email = document.getElementById('cadastroEmail').value;
+            const cpf = document.getElementById('cadastroCPF').value;
+            const nascimento = document.getElementById('cadastroNascimento').value;
+            const senha = document.getElementById('cadastroSenha').value;
+            const confirmSenha = document.getElementById('confirmSenha').value;
+            const termos = document.getElementById('termos').checked;
+            const telefone = document.getElementById('cadastroTelefone').value;
+            
+            // Validação de campos obrigatórios
+            if (!nome || !email || !cpf || !nascimento || !senha || !confirmSenha || !telefone) {
+                showToast('Por favor, preencha todos os campos obrigatórios', 'error');
+                return;
+            }
+            
+            // Validações existentes...
+            
+            // Salvar dados do usuário
+            const userData = {
+                nome,
+                email,
+                cpf,
+                nascimento,
+                telefone,
+                idade: SecurityUtils.calculateAge(nascimento),
+                senha: SecurityUtils.hashPassword(senha),
+                dataCadastro: new Date().toISOString()
+            };
+            
+            // Salvar no localStorage
+            localStorage.setItem('userData', JSON.stringify(userData));
+            
+            showToast('Conta criada com sucesso!', 'success');
+            
+            setTimeout(() => {
+                switchTab('login');
+            }, 1500);
+        }
+
+        // Função para formatar telefone
+        function formatTelefone(telefone) {
+            telefone = telefone.replace(/\D/g, '');
+            if (telefone.length === 11) {
+                return telefone.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
+            } else if (telefone.length === 10) {
+                return telefone.replace(/^(\d{2})(\d{4})(\d{4})$/, '($1) $2-$3');
+            }
+            return telefone;
+        }
+
+        // Adicionar máscara ao telefone
+        document.addEventListener('DOMContentLoaded', function() {
+            const telefoneInput = document.getElementById('cadastroTelefone');
+            if (telefoneInput) {
+                telefoneInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length <= 11) {
+                        e.target.value = formatTelefone(value);
+                    }
+                });
+            }
+        });
+
+        // Função para formatar data
+        function formatarData(data) {
+            if (!data) return '-';
+            const [ano, mes, dia] = data.split('-');
+            return `${dia}/${mes}/${ano}`;
+        }
+
+        // Carregar dados do usuário
+        document.addEventListener('DOMContentLoaded', function() {
+            const userData = JSON.parse(localStorage.getItem('userData'));
+            if (userData) {
+                if (document.querySelector('.user-name')) {
+                    document.querySelector('.user-name').textContent = userData.nome || 'Usuário';
+                }
+                if (document.getElementById('infoNome')) {
+                    document.getElementById('infoNome').textContent = userData.nome || '-';
+                }
+                if (document.getElementById('infoCPF')) {
+                    document.getElementById('infoCPF').textContent = userData.cpf || '-';
+                }
+                if (document.getElementById('infoEmail')) {
+                    document.getElementById('infoEmail').textContent = userData.email || '-';
+                }
+                if (document.getElementById('infoNascimento')) {
+                    document.getElementById('infoNascimento').textContent = formatarData(userData.nascimento) || '-';
+                }
+                if (document.getElementById('infoTelefone')) {
+                    document.getElementById('infoTelefone').textContent = userData.telefone || '-';
+                }
+            }
+        });
+
+        // Função para controlar o botão de voltar ao topo
+        window.onscroll = function() {
+            const scrollButton = document.querySelector('.scroll-to-top');
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                scrollButton.classList.add('visible');
+            } else {
+                scrollButton.classList.remove('visible');
+            }
+        };
+
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+    <script src="app.js"></script>
+</body>
+</html>

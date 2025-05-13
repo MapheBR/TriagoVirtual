@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Resultado da Triagem</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        :root {
+            --background: #1a1c1e;
+            --surface: #232529;
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --text: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        }
+
+        body {
+            background: var(--background);
+            color: var(--text);
+            font-family: 'Inter', 'Roboto', sans-serif;
+            margin: 0;
+            padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0) env(safe-area-inset-bottom, 0) env(safe-area-inset-left, 0);
+            min-height: 100dvh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: clamp(1rem, 3vw, 2rem);
+            width: 100%;
+            flex: 1;
+            min-height: calc(100dvh - env(safe-area-inset-top, 0) - env(safe-area-inset-bottom, 0));
+        }
+
+        .card {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+            margin-bottom: 1rem;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .icon {
+            font-size: 2em;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(0,82,204,0.1);
+            color: var(--primary);
+        }
+
+        .title {
+            flex: 1;
+        }
+
+        .title h1 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        .title p {
+            margin: 0.5rem 0 0;
+            color: var(--text-secondary);
+            font-size: 0.9em;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .grid-item {
+            background: rgba(255,255,255,0.05);
+            padding: 0.8rem;
+            border-radius: 8px;
+        }
+
+        .grid-item strong {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 0.85em;
+            margin-bottom: 0.3rem;
+        }
+
+        .section {
+            background: rgba(255,255,255,0.05);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .section h2 {
+            margin: 0 0 0.8rem;
+            font-size: 1.1em;
+            color: var(--text);
+        }
+
+        .section ul {
+            margin: 0;
+            padding-left: 1.2rem;
+        }
+
+        .section li {
+            padding: 0.3rem 0;
+        }
+
+        .priority {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 16px;
+            font-size: 0.9em;
+            margin-top: 0.8rem;
+        }
+
+        .priority-vermelho { background: rgba(255,77,79,0.1); color: var(--danger); }
+        .priority-laranja { background: rgba(250,173,20,0.1); color: var(--warning); }
+        .priority-amarelo { background: rgba(250,219,20,0.1); color: #fadb14; }
+        .priority-verde { background: rgba(82,196,26,0.1); color: var(--success); }
+        .priority-azul { background: rgba(24,144,255,0.1); color: var(--info); }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.2rem;
+            background: var(--surface);
+            color: var(--text);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            border: 1px solid transparent;
+        }
+
+        .back-btn:hover {
+            border-color: var(--primary);
+        }
+
+        .back-btn i {
+            color: var(--primary);
+        }
+
+        .result-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 1.5rem;
+            background: var(--surface);
+            min-height: calc(100vh - 3rem);
+            position: relative;
+            overflow-y: auto;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .content-wrapper {
+            padding-bottom: 100px; /* Espaço para os botões */
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+            padding: 1rem;
+            background: rgba(59, 130, 246, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(59, 130, 246, 0.1);
+        }
+
+        .result-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        .timestamp {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.8rem 1.5rem;
+            border-radius: 20px;
+            font-weight: 600;
+            margin: 1rem 0;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .status-badge.verde {
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .symptoms-list {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .symptoms-list h2 {
+            font-size: 1.2rem;
+            margin-bottom: 1.2rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .symptoms-list h2::before {
+            content: '';
+            display: block;
+            width: 4px;
+            height: 20px;
+            background: var(--gradient);
+            border-radius: 2px;
+        }
+
+        .symptoms-list li {
+            padding: 1rem;
+            background: rgba(59, 130, 246, 0.05);
+            border-radius: 8px;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(59, 130, 246, 0.1);
+        }
+
+        .symptoms-list li:hover {
+            background: rgba(59, 130, 246, 0.08);
+            transform: translateX(5px);
+        }
+
+        .symptoms-list li i {
+            color: var(--primary);
+            font-size: 0.8rem;
+        }
+
+        .instructions {
+            background: rgba(59, 130, 246, 0.05);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            border: 1px solid rgba(59, 130, 246, 0.1);
+        }
+
+        .instructions h2 {
+            font-size: 1.2rem;
+            margin-bottom: 1.2rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .instructions li {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem 0;
+            transition: transform 0.3s ease;
+        }
+
+        .instructions li:hover {
+            transform: translateX(5px);
+        }
+
+        .instructions li i {
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1.2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .info-card h3 {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-card p {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0;
+            color: var(--text);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                overflow-y: auto;
+            }
+
+            .result-container {
+                max-width: 100%;
+                padding: env(safe-area-inset-right, 1rem) env(safe-area-inset-left, 1rem);
+                margin: 0;
+                min-height: calc(100dvh - env(safe-area-inset-top, 0) - env(safe-area-inset-bottom, 0));
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                position: fixed;
+                bottom: env(safe-area-inset-bottom, 0);
+                left: 0;
+                right: 0;
+                margin: 0;
+                border-radius: 12px 12px 0 0;
+                padding: 1rem calc(1rem + env(safe-area-inset-right, 0)) calc(1rem + env(safe-area-inset-bottom, 0)) calc(1rem + env(safe-area-inset-left, 0));
+                background: rgba(0, 0, 0, 0.8);
+                backdrop-filter: blur(10px);
+                z-index: 100;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="result-container">
+        <div class="content-wrapper">
+            <div class="result-header">
+                <h1>Resultado da Triagem</h1>
+                <div class="timestamp" id="dataTriagem"></div>
+                <div class="status-badge" id="nivelUrgencia"></div>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3>Nome do Paciente</h3>
+                    <p id="nomePaciente"></p>
+                </div>
+                <div class="info-card">
+                    <h3>Idade</h3>
+                    <p id="idadePaciente"></p>
+                </div>
+                <div class="info-card">
+                    <h3>Tempo de Espera</h3>
+                    <p id="tempoEspera"></p>
+                </div>
+            </div>
+
+            <div class="symptoms-list">
+                <h2>Sintomas Relatados</h2>
+                <ul id="sintomasLista"></ul>
+            </div>
+
+            <div class="instructions">
+                <h2><i class="fas fa-info-circle"></i> Instruções</h2>
+                <ul>
+                    <li><i class="fas fa-file-medical"></i> Apresente este relatório na recepção do hospital</li>
+                    <li><i class="fas fa-user-clock"></i> Aguarde ser chamado pelo nome</li>
+                    <li><i class="fas fa-tv"></i> Fique atento ao painel eletrônico</li>
+                    <li><i class="fas fa-exclamation-circle"></i> Informe piora dos sintomas à recepção</li>
+                    <li><i class="fas fa-mobile-alt"></i> Mantenha o celular ligado</li>
+                    <li><i class="fas fa-chair"></i> Não se ausente da área de espera sem avisar</li>
+                </ul>
+            </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-primary" onclick="generatePDF()">
+                <i class="fas fa-file-pdf"></i>
+                Baixar PDF
+            </button>
+            <a href="inicio.html" class="btn btn-secondary">
+                <i class="fas fa-home"></i>
+                Voltar para o início
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const triagem = JSON.parse(localStorage.getItem('ultimaTriagem'));
+            if (!triagem) {
+                window.location.replace('triagem.html');
+                return;
+            }
+
+            // Preencher dados
+            document.getElementById('dataTriagem').textContent = `Realizada em ${new Date(triagem.dataTriagem).toLocaleString()}`;
+            document.getElementById('nomePaciente').textContent = triagem.nome;
+            document.getElementById('idadePaciente').textContent = triagem.idade;
+            document.getElementById('tempoEspera').textContent = triagem.resultado.tempo;
+
+            // Configurar nível de urgência com ícones apropriados
+            const nivelElement = document.getElementById('nivelUrgencia');
+            const icones = {
+                verde: 'fa-check-circle',
+                amarelo: 'fa-exclamation-circle',
+                laranja: 'fa-exclamation-triangle',
+                vermelho: 'fa-radiation'
+            };
+            
+            nivelElement.className = `status-badge ${triagem.resultado.nivel}`;
+            nivelElement.innerHTML = `
+                <i class="fas ${icones[triagem.resultado.nivel] || 'fa-check-circle'}"></i>
+                Nível ${triagem.resultado.texto}
+            `;
+
+            // Listar sintomas com ícones
+            const sintomasLista = document.getElementById('sintomasLista');
+            triagem.sintomas.forEach(sintoma => {
+                const li = document.createElement('li');
+                li.innerHTML = `<i class="fas fa-circle"></i> ${sintoma}`;
+                sintomasLista.appendChild(li);
+            });
+        });
+
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const triageData = JSON.parse(localStorage.getItem('ultimaTriagem'));
+            
+            // Configurações básicas
+            const startX = 20;
+            let currentY = 20;
+            const lineHeight = 8;
+            const pageWidth = doc.internal.pageSize.width;
+            
+            // Cores
+            const colors = {
+                primary: [41, 128, 185],     // Azul
+                secondary: [80, 80, 80],     // Cinza escuro
+                success: [46, 204, 113],     // Verde
+                warning: [241, 196, 15],     // Amarelo
+                danger: [231, 76, 60],       // Vermelho
+                text: [50, 50, 50]           // Texto padrão
+            };
+
+            // Funções auxiliares
+            function addTitle(text) {
+                // Retângulo de fundo suave
+                doc.setFillColor(245, 245, 255);
+                doc.rect(0, currentY - 6, pageWidth, 14, 'F');
+                
+                // Título
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(14);
+                doc.setTextColor(...colors.primary);
+                doc.text(text, startX, currentY);
+                currentY += lineHeight;
+                
+                // Linha decorativa
+                doc.setDrawColor(...colors.primary);
+                doc.setLineWidth(0.5);
+                doc.line(startX, currentY - 2, pageWidth - startX, currentY - 2);
+                currentY += lineHeight;
+            }
+
+            function addText(text, bold = false) {
+                doc.setFont('helvetica', bold ? 'bold' : 'normal');
+                doc.setFontSize(11);
+                doc.setTextColor(...colors.text);
+                doc.text(text, startX, currentY);
+                currentY += lineHeight;
+            }
+
+            function addBulletPoint(text) {
+                // Bullet point estilizado
+                doc.setFillColor(...colors.primary);
+                doc.circle(startX + 3, currentY - 2, 1, 'F');
+                doc.setTextColor(...colors.text);
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(11);
+                doc.text(text, startX + 8, currentY);
+                currentY += lineHeight;
+            }
+
+            function addColoredSection(text, color) {
+                doc.setFillColor(...color);
+                doc.setTextColor(255, 255, 255);
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(12);
+                // Retângulo arredondado
+                doc.roundedRect(startX, currentY - 5, pageWidth - (startX * 2), 12, 2, 2, 'F');
+                doc.text(text, startX + 5, currentY);
+                currentY += lineHeight + 4;
+            }
+
+            // Cabeçalho
+            doc.setFillColor(...colors.primary);
+            doc.rect(0, 0, pageWidth, 40, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(22);
+            doc.text('RELATÓRIO DE TRIAGEM', 105, 25, { align: 'center' });
+            currentY = 50;
+
+            // Data e Hora
+            const dataTriagem = new Date(triageData.dataTriagem);
+            doc.setFillColor(250, 250, 250);
+            doc.rect(startX, currentY - 5, pageWidth - (startX * 2), 20, 'F');
+            doc.setTextColor(...colors.secondary);
+            doc.setFontSize(10);
+            doc.text(`Data: ${dataTriagem.toLocaleDateString()}     Hora: ${dataTriagem.toLocaleTimeString()}`, startX + 5, currentY + 5);
+            currentY += lineHeight * 3;
+
+            // Dados do Paciente
+            addTitle('DADOS DO PACIENTE');
+            addText(`Nome: ${triageData.nome}`, true);
+            addText(`Idade: ${triageData.idade}`);
+            currentY += lineHeight / 2;
+
+            // Classificação de Risco
+            addTitle('CLASSIFICACAO DE RISCO');
+            
+            // Determinar cor baseada no nível
+            let statusColor = colors.success; // Verde por padrão
+            switch(triageData.resultado.nivel) {
+                case 'vermelho':
+                    statusColor = colors.danger;
+                    break;
+                case 'amarelo':
+                    statusColor = colors.warning;
+                    break;
+                case 'laranja':
+                    statusColor = [230, 126, 34]; // Laranja
+                    break;
+            }
+            
+            addColoredSection(`Nivel de Urgencia: ${triageData.resultado.texto}`, statusColor);
+            addText(`Tempo Estimado de Espera: ${triageData.resultado.tempo}`, true);
+            currentY += lineHeight;
+
+            // Sintomas
+            addTitle('SINTOMAS RELATADOS');
+            triageData.sintomas.forEach(sintoma => {
+                addBulletPoint(sintoma);
+            });
+            currentY += lineHeight;
+
+            // Instruções
+            addTitle('INSTRUCOES AO PACIENTE');
+            const instrucoes = [
+                '1. Apresente este relatorio na recepcao do hospital',
+                '2. Aguarde ser chamado pelo nome no painel eletronico',
+                '3. Mantenha seu celular ligado',
+                '4. Informe a recepcao caso haja piora dos sintomas',
+                '5. Nao se ausente da area de espera sem avisar',
+                '6. Mantenha o distanciamento social'
+            ];
+            instrucoes.forEach(instrucao => {
+                addBulletPoint(instrucao);
+            });
+
+            // Aviso importante
+            currentY += lineHeight;
+            doc.setFillColor(255, 245, 245);
+            doc.rect(startX, currentY - 5, pageWidth - (startX * 2), 25, 'F');
+            doc.setTextColor(...colors.danger);
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(11);
+            doc.text('IMPORTANTE:', startX + 5, currentY);
+            currentY += lineHeight;
+            doc.setFont('helvetica', 'normal');
+            doc.text('Em caso de emergencia, ligue para o SAMU: 192', startX + 5, currentY);
+            currentY += lineHeight * 2;
+
+            // Rodapé
+            doc.setFillColor(245, 245, 245);
+            doc.rect(0, 270, pageWidth, 27, 'F');
+            doc.setTextColor(...colors.secondary);
+            doc.setFontSize(9);
+            doc.text('Este documento e uma triagem inicial e nao substitui a avaliacao medica presencial.', 105, 280, { align: 'center' });
+            
+            // ID do documento
+            doc.setFontSize(8);
+            doc.text(`ID: ${triageData.id || 'N/A'}`, startX, 290);
+            doc.text('Triagem Virtual v1.0', 170, 290);
+
+            // Salvar o PDF
+            const fileName = `triagem_${triageData.nome.replace(/\s+/g, '_')}_${dataTriagem.toISOString().split('T')[0]}.pdf`;
+            doc.save(fileName);
+        }
+    </script>
+</body>
+</html> 

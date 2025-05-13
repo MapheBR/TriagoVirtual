@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1565c0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Configurações - Sistema de Triagem</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="main-container">
+        <header class="header">
+            <h1>Configurações</h1>
+        </header>
+
+        <main class="content page-transition">
+            <div class="settings-container">
+                <div class="settings-group">
+                    <h2>Configurações</h2>
+                    <div class="settings-item">
+                        <span>Tema Escuro</span>
+                        <label class="switch">
+                            <input type="checkbox" id="themeToggle" onchange="toggleTheme()">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <button class="logout-button" onclick="handleLogout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Sair
+                    </button>
+                </div>
+
+                <div class="settings-card">
+                    <h2>Notificações</h2>
+                    <div class="setting-item">
+                        <span>Alertas de Prioridade</span>
+                        <label class="switch">
+                            <input type="checkbox" id="priorityAlerts">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <h2>Dados</h2>
+                    <button class="settings-button" onclick="exportData()">
+                        <i class="fas fa-download"></i>
+                        Exportar Dados
+                    </button>
+                    <button class="settings-button danger" onclick="clearData()">
+                        <i class="fas fa-trash"></i>
+                        Limpar Dados
+                    </button>
+                </div>
+
+                <div class="settings-card">
+                    <h2>Sobre</h2>
+                    <div class="about-info">
+                        <p>Versão 1.0.0</p>
+                        <p>© 2025 Sistema de Triagem</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <nav class="nav-bar">
+            <a href="inicio.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>Início</span>
+            </a>
+            <a href="historico.html" class="nav-item">
+                <i class="fas fa-history"></i>
+                <span>Histórico</span>
+            </a>
+            <a href="configuracoes.html" class="nav-item active">
+                <i class="fas fa-cog"></i>
+                <span>Config</span>
+            </a>
+        </nav>
+
+        <footer class="app-footer">
+            <p>Sistema de Triagem Virtual</p>
+            <div class="footer-links">
+                <a href="#" class="footer-link">Termos de Uso</a>
+                <span class="footer-divider">|</span>
+                <a href="#" class="footer-link">Privacidade</a>
+                <span class="footer-divider">|</span>
+                <a href="#" class="footer-link">Ajuda</a>
+            </div>
+            <p class="version">Versão 1.0.0</p>
+        </footer>
+    </div>
+
+    <div id="toastContainer"></div>
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser) {
+                window.location.replace('index.html');
+                return;
+            }
+        });
+
+        function handleLogout() {
+            localStorage.removeItem('currentUser');
+            window.location.replace('index.html');
+        }
+
+        function exportData() {
+            // Implementar exportação de dados
+            alert('Função em desenvolvimento');
+        }
+
+        function clearData() {
+            if (confirm('Tem certeza que deseja limpar todos os dados?')) {
+                localStorage.clear();
+                alert('Dados limpos com sucesso');
+                window.location.replace('index.html');
+            }
+        }
+    </script>
+
+    <style>
+        .settings-container {
+            padding: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .settings-group {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .settings-group h2 {
+            margin: 0 0 1rem 0;
+            color: var(--text-primary);
+            font-size: 1.25rem;
+        }
+
+        .settings-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+        }
+
+        .settings-card {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .logout-button {
+            width: 100%;
+            padding: 1rem;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-button:hover {
+            background: #c82333;
+            transform: translateY(-1px);
+        }
+
+        .logout-button:active {
+            transform: translateY(0);
+        }
+
+        .logout-button i {
+            font-size: 1.1rem;
+        }
+
+        .settings-button {
+            width: 100%;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--primary);
+            color: white;
+        }
+
+        .settings-button.danger {
+            background: #dc3545;
+        }
+
+        .settings-button:last-child {
+            margin-bottom: 0;
+        }
+
+        .about-info {
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        .about-info p {
+            margin: 0.5rem 0;
+        }
+    </style>
+</body>
+</html>

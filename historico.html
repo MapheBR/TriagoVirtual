@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1565c0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Histórico - Triagem</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="main-container">
+        <header class="header">
+            <h1>Histórico de Triagens</h1>
+        </header>
+
+        <main class="content page-transition">
+            <div class="search-bar">
+                <input type="text" placeholder="Buscar paciente..." id="searchInput">
+                <i class="fas fa-search"></i>
+            </div>
+
+            <div class="history-list" id="historyList">
+                <!-- Os itens serão inseridos dinamicamente via JavaScript -->
+            </div>
+        </main>
+
+        <nav class="nav-bar">
+            <a href="inicio.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>Início</span>
+            </a>
+            <a href="historico.html" class="nav-item active">
+                <i class="fas fa-history"></i>
+                <span>Histórico</span>
+            </a>
+            <a href="configuracoes.html" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Config</span>
+            </a>
+        </nav>
+        <footer class="app-footer">
+            <p>Sistema de Triagem Virtual</p>
+            <div class="footer-links">
+                <a href="#" class="footer-link">Termos de Uso</a>
+                <span class="footer-divider">|</span>
+                <a href="#" class="footer-link">Privacidade</a>
+                <span class="footer-divider">|</span>
+                <a href="#" class="footer-link">Ajuda</a>
+            </div>
+            <p class="version">Versão 1.0.0</p>
+        </footer>
+    </div>
+
+    <div id="toastContainer"></div>
+    <script src="app.js"></script>
+</body>
+</html>

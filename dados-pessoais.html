@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1565c0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Meus Dados - Sistema de Triagem</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="main-container">
+        <header class="header">
+            <h1>Meus Dados</h1>
+        </header>
+        <main class="content page-transition">
+            <div class="profile-container">
+                <div class="profile-header">
+                    <div class="profile-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h2 class="user-name">Carregando...</h2>
+                </div>
+                <div class="profile-info">
+                    <div class="info-group">
+                        <i class="fas fa-id-card"></i>
+                        <div class="info-details">
+                            <span class="info-label">Nome</span>
+                            <span class="info-value" id="infoNome">Carregando...</span>
+                        </div>
+                    </div>
+                    <div class="info-group">
+                        <i class="fas fa-address-card"></i>
+                        <div class="info-details">
+                            <span class="info-label">CPF</span>
+                            <span class="info-value" id="infoCPF">Carregando...</span>
+                        </div>
+                    </div>
+                    <div class="info-group">
+                        <i class="fas fa-envelope"></i>
+                        <div class="info-details">
+                            <span class="info-label">E-mail</span>
+                            <span class="info-value" id="infoEmail">Carregando...</span>
+                        </div>
+                    </div>
+                    <div class="info-group">
+                        <i class="fas fa-birthday-cake"></i>
+                        <div class="info-details">
+                            <span class="info-label">Data de Nascimento</span>
+                            <span class="info-value" id="infoNascimento">Carregando...</span>
+                        </div>
+                    </div>
+                    <div class="info-group">
+                        <i class="fas fa-phone"></i>
+                        <div class="info-details">
+                            <span class="info-label">Telefone</span>
+                            <span class="info-value" id="infoTelefone">Carregando...</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-actions">
+                    <button class="action-button" onclick="editarPerfil()">
+                        <i class="fas fa-edit"></i> Editar Dados
+                    </button>
+                </div>
+            </div>
+        </main>
+        <nav class="nav-bar">
+            <a href="inicio.html" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>Início</span>
+            </a>
+            <a href="historico.html" class="nav-item">
+                <i class="fas fa-history"></i>
+                <span>Histórico</span>
+            </a>
+            <a href="configuracoes.html" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Config</span>
+            </a>
+        </nav>
+    </div>
+    <div id="toastContainer"></div>
+    <script src="app.js"></script>
+    <script>
+        // Preencher dados do usuário ao carregar a página
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentUser = DB.get('currentUser');
+            if (!currentUser) {
+                window.location.replace('index.html');
+                return;
+            }
+            document.querySelector('.user-name').textContent = currentUser.nome || 'Usuário';
+            document.getElementById('infoNome').textContent = currentUser.nome || '-';
+            document.getElementById('infoCPF').textContent = currentUser.cpf || '-';
+            document.getElementById('infoEmail').textContent = currentUser.email || '-';
+            document.getElementById('infoNascimento').textContent = currentUser.dataNascimento || '-';
+            document.getElementById('infoTelefone').textContent = currentUser.telefone || '-';
+        });
+        function editarPerfil() {
+            Toast.show('Funcionalidade de edição em breve!', 'info');
+        }
+    </script>
+</body>
+</html> 
